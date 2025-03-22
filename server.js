@@ -1,3 +1,4 @@
+// Import the necessary modules
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -16,17 +17,15 @@ const shopReviewRouter = require("./routes/shop/review-routes");
 
 const commonFeatureRouter = require("./routes/common/feature-routes");
 
-
+// Connect to MongoDB
 mongoose
-  .connect(process.env.DBURL,)
+  .connect(process.env.DBURL)
   .then(() => console.log("MongoDB connected"))
   .catch((error) => console.log(error));
 
 const app = express();
-const PORT = process.env.PORT || 5001;
 
-
-
+// Middleware
 app.use(
   cors({
     origin: process.env.FRONTEND_URL,
@@ -44,6 +43,8 @@ app.use(
 
 app.use(cookieParser());
 app.use(express.json());
+
+// API Routes
 app.use("/api/auth", authRouter);
 app.use("/api/admin/products", adminProductsRouter);
 app.use("/api/admin/orders", adminOrderRouter);
@@ -57,4 +58,5 @@ app.use("/api/shop/review", shopReviewRouter);
 
 app.use("/api/common/feature", commonFeatureRouter);
 
-app.listen(PORT, () => console.log(`Server is now running on port ${PORT}`));
+// Export the serverless handler (for Vercel)
+module.exports = app;
